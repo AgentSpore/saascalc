@@ -3,17 +3,19 @@ from models import (
     LTVInput, CACInput, MRRInput, RunwayInput,
     PaybackInput, ChurnInput, QuickRatioInput,
     NDRInput, RuleOf40Input, FullMetricsInput,
+    CompareInput,
 )
 from engine import (
     calc_ltv, calc_cac, calc_mrr, calc_runway,
     calc_payback, calc_churn, calc_quick_ratio,
     calc_ndr, calc_rule_of_40, calc_all,
+    calc_compare,
 )
 
 app = FastAPI(
     title="SaasCalc",
     description="SaaS metrics calculator API — LTV, CAC, MRR, ARR, runway, churn, NDR, Rule of 40 and more. Stateless: just POST your numbers, get answers.",
-    version="1.1.0",
+    version="1.2.0",
 )
 
 
@@ -54,18 +56,21 @@ def quick_ratio(body: QuickRatioInput):
 
 @app.post("/calc/ndr")
 def ndr(body: NDRInput):
-    """Net Dollar Retention — revenue retained and expanded from existing customers.
-    >130% exceptional, >110% healthy, >100% stable, <100% at risk."""
     return calc_ndr(body.mrr_start, body.expansion_mrr, body.contraction_mrr, body.churned_mrr)
 
 
 @app.post("/calc/rule-of-40")
 def rule_of_40(body: RuleOf40Input):
-    """Rule of 40: growth_rate% + profit_margin% >= 40 signals healthy SaaS.
-    Use EBITDA or FCF margin; negative values mean cash burn."""
     return calc_rule_of_40(body.revenue_growth_rate_pct, body.profit_margin_pct)
 
 
 @app.post("/calc/all")
 def all_metrics(body: FullMetricsInput):
     return calc_all(body.model_dump())
+
+
+@app.post("/calc/compare")
+def compare(body: CompareInput):
+    """Compare SaaS metrics between two periods side-by-side.
+    Returns each metric with value_a, value_b, delta, pct_change, and trend."""
+    return calc_compare(body.model_dump())
