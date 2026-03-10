@@ -3,9 +3,9 @@ from typing import Optional
 
 
 class LTVInput(BaseModel):
-    arpu: float                      # average revenue per user (monthly)
-    churn_rate_pct: float            # monthly churn %
-    gross_margin_pct: float = 100.0  # optional gross margin %
+    arpu: float
+    churn_rate_pct: float
+    gross_margin_pct: float = 100.0
 
 
 class CACInput(BaseModel):
@@ -15,7 +15,7 @@ class CACInput(BaseModel):
 
 class MRRInput(BaseModel):
     customers: int
-    arpu: float  # average monthly revenue per customer
+    arpu: float
 
 
 class RunwayInput(BaseModel):
@@ -25,7 +25,7 @@ class RunwayInput(BaseModel):
 
 class PaybackInput(BaseModel):
     cac: float
-    arpu: float               # monthly
+    arpu: float
     gross_margin_pct: float = 100.0
 
 
@@ -44,6 +44,18 @@ class QuickRatioInput(BaseModel):
     expansion_mrr: float
     churned_mrr: float
     contraction_mrr: float
+
+
+class NDRInput(BaseModel):
+    mrr_start: float              # MRR at start of period (existing customers only)
+    expansion_mrr: float          # Upsells / seat expansions
+    contraction_mrr: float        # Downgrades
+    churned_mrr: float            # Cancelled accounts
+
+
+class RuleOf40Input(BaseModel):
+    revenue_growth_rate_pct: float    # YoY or QoQ revenue growth %
+    profit_margin_pct: float          # EBITDA or FCF margin % (negative = burning cash)
 
 
 class FullMetricsInput(BaseModel):
