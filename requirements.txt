@@ -1,3 +1,1 @@
-fastapi>=0.115.0
-uvicorn[standard]>=0.32.0
-pydantic>=2.0.0
+ZmFzdGFwaT49MC4xMTAuMAp1dmljb3JuW3N0YW5kYXJkXT49MC4yNy4wCnB5ZGFudGljPj0yLjAuMAo=
