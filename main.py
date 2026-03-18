@@ -1,1 +1,97 @@
-ZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCmZyb20gZmFzdGFwaSBpbXBvcnQgRmFzdEFQSQpmcm9tIGZhc3RhcGkuc3RhdGljZmlsZXMgaW1wb3J0IFN0YXRpY0ZpbGVzCmZyb20gZmFzdGFwaS5yZXNwb25zZXMgaW1wb3J0IEhUTUxSZXNwb25zZQpmcm9tIG1vZGVscyBpbXBvcnQgKAogICAgTFRWSW5wdXQsIENBQ0lucHV0LCBNUlJJbnB1dCwgUnVud2F5SW5wdXQsCiAgICBQYXliYWNrSW5wdXQsIENodXJuSW5wdXQsIFF1aWNrUmF0aW9JbnB1dCwKICAgIE5EUklucHV0LCBSdWxlT2Y0MElucHV0LCBGdWxsTWV0cmljc0lucHV0LAogICAgQ29tcGFyZUlucHV0LAopCmZyb20gZW5naW5lIGltcG9ydCAoCiAgICBjYWxjX2x0diwgY2FsY19jYWMsIGNhbGNfbXJyLCBjYWxjX3J1bndheSwKICAgIGNhbGNfcGF5YmFjaywgY2FsY19jaHVybiwgY2FsY19xdWlja19yYXRpbywKICAgIGNhbGNfbmRyLCBjYWxjX3J1bGVfb2ZfNDAsIGNhbGNfYWxsLAogICAgY2FsY19jb21wYXJlLAopCgphcHAgPSBGYXN0QVBJKAogICAgdGl0bGU9IlNhYXNDYWxjIiwKICAgIGRlc2NyaXB0aW9uPSJTYWFTIG1ldHJpY3MgY2FsY3VsYXRvciBBUEkg4oCUIExUViwgQ0FDLCBNUlIsIEFSUiwgcnVud2F5LCBjaHVybiwgTkRSLCBSdWxlIG9mIDQwIGFuZCBtb3JlLiBTdGF0ZWxlc3M6IGp1c3QgUE9TVCB5b3VyIG51bWJlcnMsIGdldCBhbnN3ZXJzLiIsCiAgICB2ZXJzaW9uPSIxLjIuMCIsCikKClNUQVRJQ19ESVIgPSBQYXRoKF9fZmlsZV9fKS5wYXJlbnQgLyAic3RhdGljIgppZiBTVEFUSUNfRElSLmV4aXN0cygpOgogICAgYXBwLm1vdW50KCIvc3RhdGljIiwgU3RhdGljRmlsZXMoZGlyZWN0b3J5PXN0cihTVEFUSUNfRElSKSksIG5hbWU9InN0YXRpYyIpCgoKQGFwcC5nZXQoIi8iLCByZXNwb25zZV9jbGFzcz1IVE1MUmVzcG9uc2UpCmRlZiBpbmRleCgpOgogICAgaHRtbF9wYXRoID0gU1RBVElDX0RJUiAvICJpbmRleC5odG1sIgogICAgaWYgaHRtbF9wYXRoLmV4aXN0cygpOgogICAgICAgIHJldHVybiBIVE1MUmVzcG9uc2UoaHRtbF9wYXRoLnJlYWRfdGV4dCgpKQogICAgcmV0dXJuIEhUTUxSZXNwb25zZSgiPGgxPlNhYXNDYWxjIEFQSTwvaDE+PHA+U2VlIDxhIGhyZWY9XCIvZG9jc1wiPi9kb2NzPC9hPjwvcD4iKQoKCkBhcHAuZ2V0KCIvaGVhbHRoIikKZGVmIGhlYWx0aCgpOgogICAgcmV0dXJuIHsic3RhdHVzIjogIm9rIn0KCgpAYXBwLnBvc3QoIi9jYWxjL2x0diIpCmRlZiBsdHYoYm9keTogTFRWSW5wdXQpOgogICAgcmV0dXJuIGNhbGNfbHR2KGJvZHkuYXJwdSwgYm9keS5jaHVybl9yYXRlX3BjdCwgYm9keS5ncm9zc19tYXJnaW5fcGN0KQoKCkBhcHAucG9zdCgiL2NhbGMvY2FjIikKZGVmIGNhYyhib2R5OiBDQUNJbnB1dCk6CiAgICByZXR1cm4gY2FsY19jYWMoYm9keS50b3RhbF9zYWxlc19tYXJrZXRpbmdfc3BlbmQsIGJvZHkubmV3X2N1c3RvbWVyc19hY3F1aXJlZCkKCgpAYXBwLnBvc3QoIi9jYWxjL21yciIpCmRlZiBtcnIoYm9keTogTVJSSW5wdXQpOgogICAgcmV0dXJuIGNhbGNfbXJyKGJvZHkuY3VzdG9tZXJzLCBib2R5LmFycHUpCgoKQGFwcC5wb3N0KCIvY2FsYy9ydW53YXkiKQpkZWYgcnVud2F5KGJvZHk6IFJ1bndheUlucHV0KToKICAgIHJldHVybiBjYWxjX3J1bndheShib2R5LmNhc2hfb25faGFuZCwgYm9keS5tb250aGx5X2J1cm4pCgoKQGFwcC5wb3N0KCIvY2FsYy9wYXliYWNrIikKZGVmIHBheWJhY2soYm9keTogUGF5YmFja0lucHV0KToKICAgIHJldHVybiBjYWxjX3BheWJhY2soYm9keS5jYWMsIGJvZHkuYXJwdSwgYm9keS5ncm9zc19tYXJnaW5fcGN0KQoKCkBhcHAucG9zdCgiL2NhbGMvY2h1cm4iKQpkZWYgY2h1cm4oYm9keTogQ2h1cm5JbnB1dCk6CiAgICByZXR1cm4gY2FsY19jaHVybihib2R5LmN1c3RvbWVyc19zdGFydCwgYm9keS5jdXN0b21lcnNfbG9zdCwgYm9keS5wZXJpb2RfZGF5cykKCgpAYXBwLnBvc3QoIi9jYWxjL3F1aWNrLXJhdGlvIikKZGVmIHF1aWNrX3JhdGlvKGJvZHk6IFF1aWNrUmF0aW9JbnB1dCk6CiAgICByZXR1cm4gY2FsY19xdWlja19yYXRpbyhib2R5Lm5ld19tcnIsIGJvZHkuZXhwYW5zaW9uX21yciwgYm9keS5jaHVybmVkX21yciwgYm9keS5jb250cmFjdGlvbl9tcnIpCgoKQGFwcC5wb3N0KCIvY2FsYy9uZHIiKQpkZWYgbmRyKGJvZHk6IE5EUklucHV0KToKICAgIHJldHVybiBjYWxjX25kcihib2R5Lm1ycl9zdGFydCwgYm9keS5leHBhbnNpb25fbXJyLCBib2R5LmNvbnRyYWN0aW9uX21yciwgYm9keS5jaHVybmVkX21ycikKCgpAYXBwLnBvc3QoIi9jYWxjL3J1bGUtb2YtNDAiKQpkZWYgcnVsZV9vZl80MChib2R5OiBSdWxlT2Y0MElucHV0KToKICAgIHJldHVybiBjYWxjX3J1bGVfb2ZfNDAoYm9keS5yZXZlbnVlX2dyb3d0aF9yYXRlX3BjdCwgYm9keS5wcm9maXRfbWFyZ2luX3BjdCkKCgpAYXBwLnBvc3QoIi9jYWxjL2FsbCIpCmRlZiBhbGxfbWV0cmljcyhib2R5OiBGdWxsTWV0cmljc0lucHV0KToKICAgIHJldHVybiBjYWxjX2FsbChib2R5Lm1vZGVsX2R1bXAoKSkKCgpAYXBwLnBvc3QoIi9jYWxjL2NvbXBhcmUiKQpkZWYgY29tcGFyZShib2R5OiBDb21wYXJlSW5wdXQpOgogICAgIiIiQ29tcGFyZSBTYWFTIG1ldHJpY3MgYmV0d2VlbiB0d28gcGVyaW9kcyBzaWRlLWJ5LXNpZGUuCiAgICBSZXR1cm5zIGVhY2ggbWV0cmljIHdpdGggdmFsdWVfYSwgdmFsdWVfYiwgZGVsdGEsIHBjdF9jaGFuZ2UsIGFuZCB0cmVuZC4iIiIKICAgIGQgPSBib2R5Lm1vZGVsX2R1bXAoKQogICAgcmV0dXJuIGNhbGNfY29tcGFyZShkWyJwZXJpb2RfYSJdLCBkWyJwZXJpb2RfYiJdLCBkWyJwZXJpb2RfYV9sYWJlbCJdLCBkWyJwZXJpb2RfYl9sYWJlbCJdKQo=
+from pathlib import Path
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
+from models import (
+    LTVInput, CACInput, MRRInput, RunwayInput,
+    PaybackInput, ChurnInput, QuickRatioInput,
+    NDRInput, RuleOf40Input, FullMetricsInput,
+    CompareInput,
+)
+from engine import (
+    calc_ltv, calc_cac, calc_mrr, calc_runway,
+    calc_payback, calc_churn, calc_quick_ratio,
+    calc_ndr, calc_rule_of_40, calc_all,
+    calc_compare,
+)
+
+app = FastAPI(
+    title="SaasCalc",
+    description="SaaS metrics calculator API — LTV, CAC, MRR, ARR, runway, churn, NDR, Rule of 40 and more. Stateless: just POST your numbers, get answers.",
+    version="1.2.0",
+)
+
+STATIC_DIR = Path(__file__).parent / "static"
+if STATIC_DIR.exists():
+    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
+
+@app.get("/", response_class=HTMLResponse)
+def index():
+    html_path = STATIC_DIR / "index.html"
+    if html_path.exists():
+        return HTMLResponse(html_path.read_text())
+    return HTMLResponse("<h1>SaasCalc API</h1><p>See <a href=\"/docs\">/docs</a></p>")
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+
+@app.post("/calc/ltv")
+def ltv(body: LTVInput):
+    return calc_ltv(body.arpu, body.churn_rate_pct, body.gross_margin_pct)
+
+
+@app.post("/calc/cac")
+def cac(body: CACInput):
+    return calc_cac(body.total_sales_marketing_spend, body.new_customers_acquired)
+
+
+@app.post("/calc/mrr")
+def mrr(body: MRRInput):
+    return calc_mrr(body.customers, body.arpu)
+
+
+@app.post("/calc/runway")
+def runway(body: RunwayInput):
+    return calc_runway(body.cash_on_hand, body.monthly_burn)
+
+
+@app.post("/calc/payback")
+def payback(body: PaybackInput):
+    return calc_payback(body.cac, body.arpu, body.gross_margin_pct)
+
+
+@app.post("/calc/churn")
+def churn(body: ChurnInput):
+    return calc_churn(body.customers_start, body.customers_lost, body.period_days)
+
+
+@app.post("/calc/quick-ratio")
+def quick_ratio(body: QuickRatioInput):
+    return calc_quick_ratio(body.new_mrr, body.expansion_mrr, body.churned_mrr, body.contraction_mrr)
+
+
+@app.post("/calc/ndr")
+def ndr(body: NDRInput):
+    return calc_ndr(body.mrr_start, body.expansion_mrr, body.contraction_mrr, body.churned_mrr)
+
+
+@app.post("/calc/rule-of-40")
+def rule_of_40(body: RuleOf40Input):
+    return calc_rule_of_40(body.revenue_growth_rate_pct, body.profit_margin_pct)
+
+
+@app.post("/calc/all")
+def all_metrics(body: FullMetricsInput):
+    return calc_all(body.model_dump())
+
+
+@app.post("/calc/compare")
+def compare(body: CompareInput):
+    """Compare SaaS metrics between two periods side-by-side.
+    Returns each metric with value_a, value_b, delta, pct_change, and trend."""
+    d = body.model_dump()
+    return calc_compare(d["period_a"], d["period_b"], d["period_a_label"], d["period_b_label"])
