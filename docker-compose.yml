@@ -1,1 +1,11 @@
-dmVyc2lvbjogIjMuOSIKCnNlcnZpY2VzOgogIHNhYXNjYWxjOgogICAgYnVpbGQ6IC4KICAgIHBvcnRzOgogICAgICAtICI4MDAwOjgwMDAiCiAgICBlbnZpcm9ubWVudDoKICAgICAgLSBQWVRIT05VTkJVRkZFUkVEPTEKICAgIGhlYWx0aGNoZWNrOgogICAgICB0ZXN0OiBbIkNNRCIsICJweXRob24iLCAiLWMiLCAiaW1wb3J0IHVybGxpYi5yZXF1ZXN0OyB1cmxsaWIucmVxdWVzdC51cmxvcGVuKCdodHRwOi8vbG9jYWxob3N0OjgwMDAvaGVhbHRoJykiXQogICAgICBpbnRlcnZhbDogMzBzCiAgICAgIHRpbWVvdXQ6IDVzCiAgICAgIHJldHJpZXM6IDMKICAgICAgc3RhcnRfcGVyaW9kOiAxMHMKICAgIHJlc3RhcnQ6IHVubGVzcy1zdG9wcGVkCg==
+services:
+  saascalc:
+    build: .
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
