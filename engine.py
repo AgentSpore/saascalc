@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from math import expm1, isfinite, log1p
+from math import expm1, fsum, isfinite, log1p
 
 
 def validate_result(value: object) -> None:
@@ -85,21 +85,31 @@ def calc_churn(customers_start: int, lost: int, period_days: int = 30) -> dict:
     }
 
 
-def calc_quick_ratio(new_mrr: float, expansion_mrr: float, churned_mrr: float, contraction_mrr: float) -> dict:
-    lost = churned_mrr + contraction_mrr
+def calc_quick_ratio(
+    new_mrr: float, expansion_mrr: float, churned_mrr: float, contraction_mrr: float
+) -> dict:
+    """Calculate growth efficiency, rejecting overflowing intermediate sums."""
+    lost = fsum((churned_mrr, contraction_mrr))
     if lost <= 0:
         return {"quick_ratio": None, "note": "No churn or contraction"}
-    qr = (new_mrr + expansion_mrr) / lost
+    qr = fsum((new_mrr, expansion_mrr)) / lost
     return {
         "quick_ratio": round(qr, 2),
-        "interpretation": "healthy (>4)" if qr > 4 else "good (2-4)" if qr >= 2 else "struggling (<2)",
+        "interpretation": "healthy (>4)"
+        if qr > 4
+        else "good (2-4)"
+        if qr >= 2
+        else "struggling (<2)",
     }
 
 
-def calc_ndr(mrr_start: float, expansion_mrr: float, contraction_mrr: float, churned_mrr: float) -> dict:
+def calc_ndr(
+    mrr_start: float, expansion_mrr: float, contraction_mrr: float, churned_mrr: float
+) -> dict:
+    """Calculate retention from a stable sum of signed revenue changes."""
     if mrr_start <= 0:
         return {"error": "mrr_start must be > 0"}
-    ending_mrr = mrr_start + expansion_mrr - contraction_mrr - churned_mrr
+    ending_mrr = fsum((mrr_start, expansion_mrr, -contraction_mrr, -churned_mrr))
     ndr = (ending_mrr / mrr_start) * 100
     if ndr >= 130:
         rating, note = "exceptional", "Hypergrowth from existing customers"
@@ -110,9 +120,11 @@ def calc_ndr(mrr_start: float, expansion_mrr: float, contraction_mrr: float, chu
     else:
         rating, note = "at_risk", "Revenue shrinking — urgent retention needed"
     return {
-        "ndr_pct": round(ndr, 1), "ending_mrr": round(ending_mrr, 2),
+        "ndr_pct": round(ndr, 1),
+        "ending_mrr": round(ending_mrr, 2),
         "net_change_mrr": round(ending_mrr - mrr_start, 2),
-        "rating": rating, "note": note,
+        "rating": rating,
+        "note": note,
     }
 
 

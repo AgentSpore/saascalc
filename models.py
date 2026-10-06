@@ -1,3 +1,4 @@
+from math import fsum
 from typing import Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -69,10 +70,18 @@ class NDRInput(CalculationInput):
     @model_validator(mode="after")
     def validate_ending_revenue(self) -> Self:
         """Require revenue losses to fit the starting revenue plus expansion."""
-        if (
-            self.contraction_mrr + self.churned_mrr
-            > self.mrr_start + self.expansion_mrr
-        ):
+        try:
+            ending_mrr = fsum(
+                (
+                    self.mrr_start,
+                    self.expansion_mrr,
+                    -self.contraction_mrr,
+                    -self.churned_mrr,
+                )
+            )
+        except OverflowError as exc:
+            raise ValueError("Calculation exceeds supported numeric range") from exc
+        if ending_mrr < 0:
             raise ValueError(
                 "contraction_mrr and churned_mrr must not exceed mrr_start plus expansion_mrr"
             )

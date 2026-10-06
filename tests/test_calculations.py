@@ -234,3 +234,64 @@ def test_expansion_can_cover_contraction(client):
     )
     assert response.status_code == 200
     assert response.json()["ending_mrr"] == 30
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        (1e16, 1, 1e16, 1, 0),
+        (1e16, 1, 1e16, 0, 1),
+        (1e16, 2, 1e16, 1, 1),
+        (1e16, 1, 1e16, 2, None),
+        (1, 1e16, 1e16, 1, 0),
+        (1, 1e16, 1e16, 2, None),
+        (1e308, 1e308, 0, 0, None),
+        (1, 0, 1e308, 1e308, None),
+    ],
+)
+def test_ndr_stable_aggregation(client, case):
+    start, expansion, contraction, churn, ending = case
+    response = client.post(
+        "/calc/ndr",
+        json={
+            "mrr_start": start,
+            "expansion_mrr": expansion,
+            "contraction_mrr": contraction,
+            "churned_mrr": churn,
+        },
+    )
+    if ending is None:
+        assert response.status_code == 422
+        assert response.json()["detail"]
+    else:
+        assert response.status_code == 200
+        assert response.json()["ending_mrr"] == ending
+
+
+@pytest.mark.parametrize("growth,loss", [(1e308, 1), (1, 1e308), (1e308, 1e308)])
+def test_quick_ratio_intermediate_overflow(client, growth, loss):
+    response = client.post(
+        "/calc/quick-ratio",
+        json={
+            "new_mrr": growth,
+            "expansion_mrr": growth,
+            "churned_mrr": loss,
+            "contraction_mrr": loss,
+        },
+    )
+    assert response.status_code == 422
+    assert "numeric range" in response.json()["detail"]
+
+
+def test_quick_ratio_denominator_overflow(client):
+    response = client.post(
+        "/calc/quick-ratio",
+        json={
+            "new_mrr": 1e308,
+            "expansion_mrr": 0,
+            "churned_mrr": 1e308,
+            "contraction_mrr": 1e308,
+        },
+    )
+    assert response.status_code == 422
+    assert "numeric range" in response.json()["detail"]

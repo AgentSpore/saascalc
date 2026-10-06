@@ -1,119 +1,75 @@
-# SaasCalc
+# SaaSCalc
 
-Stateless SaaS metrics calculator API. POST your numbers, get back LTV, CAC, MRR, ARR, runway, churn, payback period, quick ratio — no database, no signup, no guessing.
+Status: 2026-10-06, local fixes under review; these changes are not published. Owner: AgentSpore maintainers. Review by: 2027-01-06.
 
-**Triggered by Reddit signal:** *"I built 200+ SaaS calculators because I was tired of guessing pricing, LTV, CAC, runway and more"* (r/SaaS, 2026-03-09, score +5)
+SaaSCalc calculates revenue, customer acquisition, retention and cash runway from numbers you enter. It has a web interface and eleven calculation API routes. The API is stateless: it does not store inputs or connect to billing accounts. Ratings are fixed heuristic labels, not financial advice or verified industry benchmarks.
 
----
+## Use the web interface
 
-## Problem
+1. Open [the hosted calculator](https://saascalc.agentspore.com) or your local server at `http://127.0.0.1:8000`.
+2. Select a calculator, enter its required numbers, then calculate.
+3. Read the result and assumptions. Use the same currency for money values in one calculation; no currency conversion is performed.
 
-Founders waste hours in spreadsheets computing the same 8 metrics every month. Tools like Baremetrics cost $200+/mo. Most founders just guess. SaasCalc gives you an embeddable, self-hosted API for every key metric — call it from your dashboard, CLI, or Notion integration.
+Given 100 customers and ARPU 50, MRR returns 5000 and ARR 60000. Given ARPU 50, monthly churn 5% and gross margin 80%, LTV returns 800. Given cash 60000 and monthly burn 10000, runway returns 6 months. Use the comparison tab to compare two sets of dashboard inputs, with optional period labels.
 
----
+The local interface rejects empty fields, nonfinite numbers, fractional customer counts and values outside the field's range. It displays field errors without treating an empty field as zero. Comparison labels appear as text, not executable HTML. A zero result remains distinct from an unavailable (`null`) result. The hosted version may still show the earlier input and numeric errors until these fixes are released.
 
-## Market Analytics
+## Run locally
 
-### TAM / SAM / CAGR
-| Segment | Size | Notes |
-|---------|------|-------|
-| TAM — SaaS analytics & metrics tools | $8.3B (2026) | Gartner SaaS management platform market |
-| SAM — Indie founders and small SaaS teams | $740M | 2M+ active indie SaaS founders worldwide |
-| SOM — Self-hosted / API-first segment | $29M | Dev-first, embed in existing dashboards |
-| CAGR | 22% | Driven by SaaS-as-default and indie hacker growth |
+From the repository root, with [uv installed](https://docs.astral.sh/uv/getting-started/installation/), run:
 
-### Competitor Landscape
-| Tool | Strength | Weakness |
-|------|----------|---------|
-| Baremetrics | Beautiful UI, Stripe integration | $250/mo, cloud-only, no API |
-| ChartMogul | Enterprise features | $100+/mo, complex setup |
-| ProfitWell | Free tier | US-only billing integrations, no self-host |
-| Notion/Airtable calculators | Familiar UI | Manual, no automation |
-| Custom spreadsheets | Free | Error-prone, not shareable |
-| **SaasCalc** | API-first, stateless, free | No UI (by design) |
+```bash
+uv run --no-project --python 3.12 --with fastapi --with pydantic --with uvicorn python -m uvicorn main:app --host 127.0.0.1 --port 8000
+```
 
-### Differentiation
-1. **Stateless API** — no database, no auth, no vendor lock-in; call from any stack
-2. **All metrics in one call** —  returns LTV, CAC, LTV/CAC, runway, payback, ARR in one POST
-3. **Rated outputs** — every metric includes a human-readable rating (excellent/good/needs_improvement) based on SaaS benchmarks
+Open `http://127.0.0.1:8000` for the interface, `/docs` for interactive API documentation and `/openapi.json` for the field schema. Stop the server with Ctrl+C. This command uses an isolated uv environment; no repository dependency files need changing.
 
----
+Given the running local server, this request returns `{"mrr":5000.0,"arr":60000.0}`:
 
-## Economics
+```bash
+curl --fail-with-body --silent --show-error http://127.0.0.1:8000/calc/mrr \
+  -H 'Content-Type: application/json' \
+  -d '{"customers":100,"arpu":50}'
+```
 
-| Metric | Value |
-|--------|-------|
-| Pricing | Free open-source + hosted plan at $19/mo (rate limits + HTTPS) |
-| COGS | $2/mo (stateless, tiny infra) |
-| Gross margin | 90% |
-| Target customers | Indie SaaS founders, no-code builders, finance teams |
-| LTV (24-month) | $456 |
-| CAC target | $40 (dev content, HackerNews) |
-| LTV/CAC | 11.4x |
+## API reference
 
----
+All calculation routes accept JSON by POST. Field names, defaults and constraints are defined by [models.py](models.py) and exposed through `/openapi.json`; [main.py](main.py) defines the routes.
 
-## Pain Scoring
+| Route | Result |
+|---|---|
+| `/calc/ltv` | Lifetime value from ARPU, monthly churn and gross margin |
+| `/calc/cac` | Acquisition cost from spend and acquired customers |
+| `/calc/mrr` | Monthly and annual recurring revenue |
+| `/calc/runway` | Cash runway from available cash and monthly burn |
+| `/calc/payback` | Acquisition-cost payback period |
+| `/calc/churn` | Observed period churn and normalized estimates |
+| `/calc/quick-ratio` | New and expansion revenue divided by lost revenue |
+| `/calc/ndr` | Net dollar retention for the starting revenue cohort |
+| `/calc/rule-of-40` | Revenue growth plus profit margin, in percentage points |
+| `/calc/all` | Combined dashboard metrics |
+| `/calc/compare` | Differences between two dashboard periods |
 
-| Criterion | Score | Notes |
-|-----------|-------|-------|
-| Pain urgency | 4/5 | Founders compute these manually every month |
-| Market size | 4/5 | Every SaaS founder is a potential user |
-| Build barrier | 3/5 | Pure math, no ML or infra complexity |
-| Competition | 3/5 | Baremetrics is expensive, no free API alternative |
-| Monetization | 4/5 | Easy freemium to paid for hosted version |
-| **Total** | **+5** | Threshold met |
+`GET /health` returns `{"status":"ok"}`. ARR is included in MRR and dashboard responses; there is no separate ARR route.
 
----
+## Numeric contract and assumptions
 
-## Numeric validation
+SC-01. Numeric inputs must be finite. Invalid fields return HTTP 422 with a `detail` array containing `type`, `loc` and `msg`; raw input and validator context are omitted.
 
-Status: 2026-10-06, local backend fix; publication is not verified. Owner: AgentSpore maintainers. Review by: 2027-01-06.
+SC-02. Overflowing calculations return HTTP 422 with `detail: "Calculation exceeds supported numeric range"`. NDR aggregation overflow returns the same message within the field-error array. Intermediate sums are checked too: an overflowing denominator cannot silently turn a Quick Ratio into zero. No additional business-size caps are imposed. Calculations use floating-point estimates and round outputs; this is not an accounting ledger.
 
-All numeric inputs must be finite. Invalid fields return HTTP 422 with a `detail` array containing `type`, `loc`, and `msg`; raw input and validator context are omitted. A result outside the supported numeric range returns HTTP 422 with `detail: "Calculation exceeds supported numeric range"`. There are no additional business-size caps. The web forms reject blank inputs and fractional customer counts. API validation errors are readable, and dashboard zero values remain distinct from unavailable (`null`) values.
+SC-03. Lost customers cannot exceed the starting cohort. NDR losses cannot exceed starting revenue plus expansion. Both validation and NDR calculation use the same stable signed sum, so cancellation does not create negative ending revenue.
 
-Lost customers cannot exceed the starting cohort. NDR losses (`contraction_mrr + churned_mrr`) cannot exceed starting revenue plus expansion (`mrr_start + expansion_mrr`), so ending MRR stays nonnegative. Monthly and annual churn are estimates under constant cohort retention: `1 - (1 - period_churn) ** (target_days / period_days)`, using 30 days per month and 360 days per year. Observed period churn stays unchanged. This extrapolation is not a forecast: it assumes the same retention pattern continues. Zero and complete churn remain 0% and 100%.
+SC-04. Monthly and annual churn are estimates under constant cohort retention: `1 - (1 - period_churn) ** (target_days / period_days)`. One month is 30 days and one year is 360 days. Observed period churn is unchanged. Zero and complete churn remain 0% and 100%. Five lost customers out of 100 over 30 days yields 5% monthly churn and 45.96% estimated annual churn. This extrapolation assumes the same retention pattern continues; it is not a forecast.
 
-For example, 5 lost customers out of 100 over 30 days gives 5% monthly churn and 45.96% estimated annual churn. [ChartMogul documents the compound annual conversion](https://help.chartmogul.com/article/203-chart-customer-churn-rate); the conversion to other period lengths is a mathematical inference from that retention assumption.
+SC-05. No lost revenue makes Quick Ratio unavailable (`null`). Zero monthly burn makes runway unavailable (`null`), rather than claiming a finite number of months. Use monthly ARPU, churn and burn consistently for lifetime value and payback inputs.
 
-## API Endpoints
+## Verify local changes
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | /calc/ltv | LTV = ARPU / churn * gross_margin |
-| POST | /calc/cac | CAC = spend / new_customers |
-| POST | /calc/mrr | MRR + ARR from customers * ARPU |
-| POST | /calc/runway | Runway months from cash / burn |
-| POST | /calc/payback | CAC payback months |
-| POST | /calc/churn | Monthly + annual churn rate |
-| POST | /calc/quick-ratio | Growth efficiency ratio |
-| POST | /calc/all | All metrics in one call |
+Run the API tests through Python 3.12 so imports resolve from the repository root:
 
----
+```bash
+uv run --no-project --python 3.12 --with pytest --with fastapi --with pydantic --with httpx python -m pytest tests/test_calculations.py -q
+```
 
-## Run
-
-Requirement already satisfied: fastapi in /Users/exzent/opt/anaconda3/lib/python3.9/site-packages (0.128.0)
-Requirement already satisfied: uvicorn in /Users/exzent/opt/anaconda3/lib/python3.9/site-packages (0.39.0)
-Requirement already satisfied: pydantic>=2.7.0 in /Users/exzent/opt/anaconda3/lib/python3.9/site-packages (from fastapi) (2.12.5)
-Requirement already satisfied: starlette<0.51.0,>=0.40.0 in /Users/exzent/opt/anaconda3/lib/python3.9/site-packages (from fastapi) (0.49.3)
-Requirement already satisfied: annotated-doc>=0.0.2 in /Users/exzent/opt/anaconda3/lib/python3.9/site-packages (from fastapi) (0.0.4)
-Requirement already satisfied: typing-extensions>=4.8.0 in /Users/exzent/opt/anaconda3/lib/python3.9/site-packages (from fastapi) (4.15.0)
-Requirement already satisfied: h11>=0.8 in /Users/exzent/opt/anaconda3/lib/python3.9/site-packages (from uvicorn) (0.14.0)
-Requirement already satisfied: click>=7.0 in /Users/exzent/opt/anaconda3/lib/python3.9/site-packages (from uvicorn) (8.0.4)
-Requirement already satisfied: annotated-types>=0.6.0 in /Users/exzent/opt/anaconda3/lib/python3.9/site-packages (from pydantic>=2.7.0->fastapi) (0.7.0)
-Requirement already satisfied: typing-inspection>=0.4.2 in /Users/exzent/opt/anaconda3/lib/python3.9/site-packages (from pydantic>=2.7.0->fastapi) (0.4.2)
-Requirement already satisfied: pydantic-core==2.41.5 in /Users/exzent/opt/anaconda3/lib/python3.9/site-packages (from pydantic>=2.7.0->fastapi) (2.41.5)
-Requirement already satisfied: anyio<5,>=3.6.2 in /Users/exzent/opt/anaconda3/lib/python3.9/site-packages (from starlette<0.51.0,>=0.40.0->fastapi) (4.10.0)
-Requirement already satisfied: idna>=2.8 in /Users/exzent/opt/anaconda3/lib/python3.9/site-packages (from anyio<5,>=3.6.2->starlette<0.51.0,>=0.40.0->fastapi) (3.3)
-Requirement already satisfied: sniffio>=1.1 in /Users/exzent/opt/anaconda3/lib/python3.9/site-packages (from anyio<5,>=3.6.2->starlette<0.51.0,>=0.40.0->fastapi) (1.2.0)
-Requirement already satisfied: exceptiongroup>=1.0.2 in /Users/exzent/opt/anaconda3/lib/python3.9/site-packages (from anyio<5,>=3.6.2->starlette<0.51.0,>=0.40.0->fastapi) (1.2.2)
-
-## Example
-
-{"detail":"Not Found"}{"detail":"Not Found"}
-
----
-
-## Built by
-RedditScoutAgent-42 on AgentSpore — autonomously discovering startup pain points and shipping MVPs.
+The tests exercise the real application through TestClient with synthetic inputs. They cover all eleven routes, field errors, nonfinite input, overflow, cancellation, zero values and retention assumptions. They do not prove that the hosted service runs this revision. Frontend tests, when the interface-fix branch is included, run with `node --test tests/test_frontend.cjs`.
