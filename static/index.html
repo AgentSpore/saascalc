@@ -85,10 +85,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   <h2>Lifetime Value (LTV)</h2>
   <p class="desc">How much revenue a customer generates over their entire lifetime.</p>
   <div class="form-row">
-    <div class="form-group"><label>ARPU ($/month)</label><input type="number" id="ltv-arpu" value="49" step="0.01"></div>
-    <div class="form-group"><label>Monthly Churn Rate (%)</label><input type="number" id="ltv-churn" value="3" step="0.1"></div>
+    <div class="form-group"><label>ARPU ($/month)</label><input type="number" id="ltv-arpu" value="49" step="0.01" min="0" data-positive="true"></div>
+    <div class="form-group"><label>Monthly Churn Rate (%)</label><input type="number" id="ltv-churn" value="3" step="0.1" min="0" data-positive="true" max="100"></div>
   </div>
-  <div class="form-group"><label>Gross Margin (%)</label><input type="number" id="ltv-margin" value="85" step="0.1"></div>
+  <div class="form-group"><label>Gross Margin (%)</label><input type="number" id="ltv-margin" value="85" step="0.1" min="0" max="100"></div>
   <button class="btn btn-primary" onclick="calcLTV()">Calculate LTV</button>
   <div class="result-box" id="res-ltv"></div>
 </div>
@@ -98,8 +98,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   <h2>Customer Acquisition Cost (CAC)</h2>
   <p class="desc">How much it costs to acquire one new customer.</p>
   <div class="form-row">
-    <div class="form-group"><label>Total Sales & Marketing Spend ($)</label><input type="number" id="cac-spend" value="10000" step="1"></div>
-    <div class="form-group"><label>New Customers Acquired</label><input type="number" id="cac-acquired" value="50" step="1"></div>
+    <div class="form-group"><label>Total Sales & Marketing Spend ($)</label><input type="number" id="cac-spend" value="10000" step="1" min="0"></div>
+    <div class="form-group"><label>New Customers Acquired</label><input type="number" id="cac-acquired" value="50" step="1" min="0" data-positive="true"></div>
   </div>
   <button class="btn btn-primary" onclick="calcCAC()">Calculate CAC</button>
   <div class="result-box" id="res-cac"></div>
@@ -110,8 +110,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   <h2>Monthly Recurring Revenue</h2>
   <p class="desc">Your predictable monthly revenue and annualized run rate.</p>
   <div class="form-row">
-    <div class="form-group"><label>Customers</label><input type="number" id="mrr-customers" value="200" step="1"></div>
-    <div class="form-group"><label>ARPU ($/month)</label><input type="number" id="mrr-arpu" value="49" step="0.01"></div>
+    <div class="form-group"><label>Customers</label><input type="number" id="mrr-customers" value="200" step="1" min="0"></div>
+    <div class="form-group"><label>ARPU ($/month)</label><input type="number" id="mrr-arpu" value="49" step="0.01" min="0"></div>
   </div>
   <button class="btn btn-primary" onclick="calcMRR()">Calculate MRR</button>
   <div class="result-box" id="res-mrr"></div>
@@ -122,8 +122,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   <h2>Cash Runway</h2>
   <p class="desc">How many months until your cash runs out at current burn rate.</p>
   <div class="form-row">
-    <div class="form-group"><label>Cash on Hand ($)</label><input type="number" id="runway-cash" value="500000" step="1"></div>
-    <div class="form-group"><label>Monthly Burn ($)</label><input type="number" id="runway-burn" value="25000" step="1"></div>
+    <div class="form-group"><label>Cash on Hand ($)</label><input type="number" id="runway-cash" value="500000" step="1" min="0"></div>
+    <div class="form-group"><label>Monthly Burn ($)</label><input type="number" id="runway-burn" value="25000" step="1" min="0"></div>
   </div>
   <button class="btn btn-primary" onclick="calcRunway()">Calculate Runway</button>
   <div class="result-box" id="res-runway"></div>
@@ -134,10 +134,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   <h2>CAC Payback Period</h2>
   <p class="desc">Months to recoup customer acquisition cost from gross profit.</p>
   <div class="form-row">
-    <div class="form-group"><label>CAC ($)</label><input type="number" id="payback-cac" value="200" step="0.01"></div>
-    <div class="form-group"><label>ARPU ($/month)</label><input type="number" id="payback-arpu" value="49" step="0.01"></div>
+    <div class="form-group"><label>CAC ($)</label><input type="number" id="payback-cac" value="200" step="0.01" min="0"></div>
+    <div class="form-group"><label>ARPU ($/month)</label><input type="number" id="payback-arpu" value="49" step="0.01" min="0" data-positive="true"></div>
   </div>
-  <div class="form-group"><label>Gross Margin (%)</label><input type="number" id="payback-margin" value="85" step="0.1"></div>
+  <div class="form-group"><label>Gross Margin (%)</label><input type="number" id="payback-margin" value="85" step="0.1" min="0" data-positive="true" max="100"></div>
   <button class="btn btn-primary" onclick="calcPayback()">Calculate Payback</button>
   <div class="result-box" id="res-payback"></div>
 </div>
@@ -147,10 +147,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   <h2>Churn Rate</h2>
   <p class="desc">Percentage of customers lost over a given period, normalized to monthly and annual rates.</p>
   <div class="form-row">
-    <div class="form-group"><label>Customers at Start</label><input type="number" id="churn-start" value="500" step="1"></div>
-    <div class="form-group"><label>Customers Lost</label><input type="number" id="churn-lost" value="12" step="1"></div>
+    <div class="form-group"><label>Customers at Start</label><input type="number" id="churn-start" value="500" step="1" min="0" data-positive="true"></div>
+    <div class="form-group"><label>Customers Lost</label><input type="number" id="churn-lost" value="12" step="1" min="0"></div>
   </div>
-  <div class="form-group"><label>Period (days)</label><input type="number" id="churn-period" value="30" step="1"></div>
+  <div class="form-group"><label>Period (days)</label><input type="number" id="churn-period" value="30" step="1" min="0" data-positive="true"></div>
   <button class="btn btn-primary" onclick="calcChurn()">Calculate Churn</button>
   <div class="result-box" id="res-churn"></div>
 </div>
@@ -160,12 +160,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   <h2>SaaS Quick Ratio</h2>
   <p class="desc">Ratio of revenue gains to losses. Above 4 = healthy growth engine.</p>
   <div class="form-row">
-    <div class="form-group"><label>New MRR ($)</label><input type="number" id="qr-new" value="5000" step="1"></div>
-    <div class="form-group"><label>Expansion MRR ($)</label><input type="number" id="qr-expansion" value="2000" step="1"></div>
+    <div class="form-group"><label>New MRR ($)</label><input type="number" id="qr-new" value="5000" step="1" min="0"></div>
+    <div class="form-group"><label>Expansion MRR ($)</label><input type="number" id="qr-expansion" value="2000" step="1" min="0"></div>
   </div>
   <div class="form-row">
-    <div class="form-group"><label>Churned MRR ($)</label><input type="number" id="qr-churned" value="800" step="1"></div>
-    <div class="form-group"><label>Contraction MRR ($)</label><input type="number" id="qr-contraction" value="300" step="1"></div>
+    <div class="form-group"><label>Churned MRR ($)</label><input type="number" id="qr-churned" value="800" step="1" min="0"></div>
+    <div class="form-group"><label>Contraction MRR ($)</label><input type="number" id="qr-contraction" value="300" step="1" min="0"></div>
   </div>
   <button class="btn btn-primary" onclick="calcQuickRatio()">Calculate Quick Ratio</button>
   <div class="result-box" id="res-quick-ratio"></div>
@@ -176,12 +176,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   <h2>Net Dollar Retention (NDR)</h2>
   <p class="desc">Revenue retained from existing customers including expansion. Above 110% = strong.</p>
   <div class="form-row">
-    <div class="form-group"><label>Starting MRR ($)</label><input type="number" id="ndr-start" value="50000" step="1"></div>
-    <div class="form-group"><label>Expansion MRR ($)</label><input type="number" id="ndr-expansion" value="8000" step="1"></div>
+    <div class="form-group"><label>Starting MRR ($)</label><input type="number" id="ndr-start" value="50000" step="1" min="0" data-positive="true"></div>
+    <div class="form-group"><label>Expansion MRR ($)</label><input type="number" id="ndr-expansion" value="8000" step="1" min="0"></div>
   </div>
   <div class="form-row">
-    <div class="form-group"><label>Contraction MRR ($)</label><input type="number" id="ndr-contraction" value="1500" step="1"></div>
-    <div class="form-group"><label>Churned MRR ($)</label><input type="number" id="ndr-churned" value="2000" step="1"></div>
+    <div class="form-group"><label>Contraction MRR ($)</label><input type="number" id="ndr-contraction" value="1500" step="1" min="0"></div>
+    <div class="form-group"><label>Churned MRR ($)</label><input type="number" id="ndr-churned" value="2000" step="1" min="0"></div>
   </div>
   <button class="btn btn-primary" onclick="calcNDR()">Calculate NDR</button>
   <div class="result-box" id="res-ndr"></div>
@@ -204,20 +204,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   <h2>Full Dashboard</h2>
   <p class="desc">Enter all your numbers and get a comprehensive SaaS health report.</p>
   <div class="form-row">
-    <div class="form-group"><label>ARPU ($/month)</label><input type="number" id="all-arpu" value="49" step="0.01"></div>
-    <div class="form-group"><label>Monthly Churn Rate (%)</label><input type="number" id="all-churn" value="3" step="0.1"></div>
+    <div class="form-group"><label>ARPU ($/month)</label><input type="number" id="all-arpu" value="49" step="0.01" min="0" data-positive="true"></div>
+    <div class="form-group"><label>Monthly Churn Rate (%)</label><input type="number" id="all-churn" value="3" step="0.1" min="0" data-positive="true" max="100"></div>
   </div>
   <div class="form-row">
-    <div class="form-group"><label>Gross Margin (%)</label><input type="number" id="all-margin" value="85" step="0.1"></div>
-    <div class="form-group"><label>MRR ($)</label><input type="number" id="all-mrr" value="9800" step="1"></div>
+    <div class="form-group"><label>Gross Margin (%)</label><input type="number" id="all-margin" value="85" step="0.1" min="0" data-positive="true" max="100"></div>
+    <div class="form-group"><label>MRR ($)</label><input type="number" id="all-mrr" value="9800" step="1" min="0"></div>
   </div>
   <div class="form-row">
-    <div class="form-group"><label>Sales & Marketing Spend ($)</label><input type="number" id="all-spend" value="10000" step="1"></div>
-    <div class="form-group"><label>New Customers Acquired</label><input type="number" id="all-acquired" value="50" step="1"></div>
+    <div class="form-group"><label>Sales & Marketing Spend ($)</label><input type="number" id="all-spend" value="10000" step="1" min="0"></div>
+    <div class="form-group"><label>New Customers Acquired</label><input type="number" id="all-acquired" value="50" step="1" min="0" data-positive="true"></div>
   </div>
   <div class="form-row">
-    <div class="form-group"><label>Cash on Hand ($)</label><input type="number" id="all-cash" value="500000" step="1"></div>
-    <div class="form-group"><label>Monthly Burn ($)</label><input type="number" id="all-burn" value="25000" step="1"></div>
+    <div class="form-group"><label>Cash on Hand ($)</label><input type="number" id="all-cash" value="500000" step="1" min="0"></div>
+    <div class="form-group"><label>Monthly Burn ($)</label><input type="number" id="all-burn" value="25000" step="1" min="0"></div>
   </div>
   <button class="btn btn-primary" onclick="calcAll()">Calculate All</button>
   <div class="result-box" id="res-all"></div>
@@ -230,39 +230,39 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   <div class="compare-section"><h4>Period A</h4>
     <div class="form-group"><label>Label</label><input type="text" id="cmp-a-label" value="Q1 2026"></div>
     <div class="form-row">
-      <div class="form-group"><label>ARPU</label><input type="number" id="cmp-a-arpu" value="45" step="0.01"></div>
-      <div class="form-group"><label>Churn %</label><input type="number" id="cmp-a-churn" value="4" step="0.1"></div>
+      <div class="form-group"><label>ARPU</label><input type="number" id="cmp-a-arpu" value="45" step="0.01" min="0" data-positive="true"></div>
+      <div class="form-group"><label>Churn %</label><input type="number" id="cmp-a-churn" value="4" step="0.1" min="0" data-positive="true" max="100"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>Margin %</label><input type="number" id="cmp-a-margin" value="80" step="0.1"></div>
-      <div class="form-group"><label>MRR</label><input type="number" id="cmp-a-mrr" value="8000" step="1"></div>
+      <div class="form-group"><label>Margin %</label><input type="number" id="cmp-a-margin" value="80" step="0.1" min="0" data-positive="true" max="100"></div>
+      <div class="form-group"><label>MRR</label><input type="number" id="cmp-a-mrr" value="8000" step="1" min="0"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>S&M Spend</label><input type="number" id="cmp-a-spend" value="12000" step="1"></div>
-      <div class="form-group"><label>Acquired</label><input type="number" id="cmp-a-acquired" value="40" step="1"></div>
+      <div class="form-group"><label>S&M Spend</label><input type="number" id="cmp-a-spend" value="12000" step="1" min="0"></div>
+      <div class="form-group"><label>Acquired</label><input type="number" id="cmp-a-acquired" value="40" step="1" min="0" data-positive="true"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>Cash</label><input type="number" id="cmp-a-cash" value="400000" step="1"></div>
-      <div class="form-group"><label>Burn</label><input type="number" id="cmp-a-burn" value="30000" step="1"></div>
+      <div class="form-group"><label>Cash</label><input type="number" id="cmp-a-cash" value="400000" step="1" min="0"></div>
+      <div class="form-group"><label>Burn</label><input type="number" id="cmp-a-burn" value="30000" step="1" min="0"></div>
     </div>
   </div>
   <div class="compare-section" style="margin-top:12px"><h4>Period B</h4>
     <div class="form-group"><label>Label</label><input type="text" id="cmp-b-label" value="Q2 2026"></div>
     <div class="form-row">
-      <div class="form-group"><label>ARPU</label><input type="number" id="cmp-b-arpu" value="52" step="0.01"></div>
-      <div class="form-group"><label>Churn %</label><input type="number" id="cmp-b-churn" value="2.5" step="0.1"></div>
+      <div class="form-group"><label>ARPU</label><input type="number" id="cmp-b-arpu" value="52" step="0.01" min="0" data-positive="true"></div>
+      <div class="form-group"><label>Churn %</label><input type="number" id="cmp-b-churn" value="2.5" step="0.1" min="0" data-positive="true" max="100"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>Margin %</label><input type="number" id="cmp-b-margin" value="87" step="0.1"></div>
-      <div class="form-group"><label>MRR</label><input type="number" id="cmp-b-mrr" value="12000" step="1"></div>
+      <div class="form-group"><label>Margin %</label><input type="number" id="cmp-b-margin" value="87" step="0.1" min="0" data-positive="true" max="100"></div>
+      <div class="form-group"><label>MRR</label><input type="number" id="cmp-b-mrr" value="12000" step="1" min="0"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>S&M Spend</label><input type="number" id="cmp-b-spend" value="10000" step="1"></div>
-      <div class="form-group"><label>Acquired</label><input type="number" id="cmp-b-acquired" value="60" step="1"></div>
+      <div class="form-group"><label>S&M Spend</label><input type="number" id="cmp-b-spend" value="10000" step="1" min="0"></div>
+      <div class="form-group"><label>Acquired</label><input type="number" id="cmp-b-acquired" value="60" step="1" min="0" data-positive="true"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>Cash</label><input type="number" id="cmp-b-cash" value="450000" step="1"></div>
-      <div class="form-group"><label>Burn</label><input type="number" id="cmp-b-burn" value="28000" step="1"></div>
+      <div class="form-group"><label>Cash</label><input type="number" id="cmp-b-cash" value="450000" step="1" min="0"></div>
+      <div class="form-group"><label>Burn</label><input type="number" id="cmp-b-burn" value="28000" step="1" min="0"></div>
     </div>
   </div>
   <button class="btn btn-primary" style="margin-top:16px" onclick="calcCompare()">Compare</button>
@@ -285,14 +285,47 @@ document.querySelectorAll('.nav-item').forEach(item => {
 
 async function post(path, body) {
   const res = await fetch(API + path, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
-  if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.detail || JSON.stringify(e) || res.statusText); }
+  if (!res.ok) {
+    const e = await res.json().catch(() => ({}));
+    const detail = e.detail;
+    const message = Array.isArray(detail)
+      ? detail.map(issue => {
+          const location = (issue.loc || []).filter(part => part !== 'body').join('.');
+          return `${location ? location + ': ' : ''}${issue.msg || 'Invalid value'}`;
+        }).join('; ')
+      : typeof detail === 'string' ? detail : res.statusText || 'Request failed';
+    throw new Error(message);
+  }
   return res.json();
 }
 
 function $(id) { return document.getElementById(id); }
-function num(id) { return parseFloat($(id).value) || 0; }
-function int_(id) { return parseInt($(id).value) || 0; }
+function num(id, integer = false) {
+  const input = $(id);
+  const raw = input.value.trim();
+  const value = Number(raw);
+  const label = input.closest('.form-group').querySelector('label').textContent;
+  let error = '';
+  if (raw === '' || !Number.isFinite(value)) error = 'Enter a finite number';
+  else if (integer && !Number.isSafeInteger(value)) error = 'Enter a whole number within the safe integer range';
+  else if (input.getAttribute('data-positive') === 'true' && value <= 0) error = 'Enter a number greater than 0';
+  else if (input.getAttribute('min') != null && value < Number(input.getAttribute('min'))) error = `Enter a number at least ${input.getAttribute('min')}`;
+  else if (input.getAttribute('max') != null && value > Number(input.getAttribute('max'))) error = `Enter a number at most ${input.getAttribute('max')}`;
+  if (error) {
+    input.setAttribute('aria-invalid', 'true');
+    input.focus();
+    throw new Error(`${label}: ${error}`);
+  }
+  input.removeAttribute('aria-invalid');
+  return value;
+}
+function int_(id) { return num(id, true); }
 function str_(id) { return $(id).value || ''; }
+
+function escapeText(value) {
+  const entities = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'};
+  return String(value).replace(/[&<>"']/g, character => entities[character]);
+}
 
 function fmt$(v) { return v == null ? 'N/A' : '$' + v.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}); }
 function fmtPct(v) { return v == null ? 'N/A' : v.toFixed(1) + '%'; }
@@ -319,7 +352,15 @@ function colorClass(key, val) {
 }
 
 function showResult(id, html) { const el = $(id); el.innerHTML = html; el.classList.add('show'); }
-function showError(id, msg) { showResult(id, `<div style="color:var(--red)">${msg}</div>`); }
+function showError(id, msg) {
+  const result = $(id);
+  const error = document.createElement('div');
+  error.style.color = 'var(--red)';
+  error.setAttribute('role', 'alert');
+  error.textContent = msg;
+  result.replaceChildren(error);
+  result.classList.add('show');
+}
 
 async function calcLTV() {
   try {
@@ -431,9 +472,9 @@ async function calcAll() {
         <div class="dash-card"><div class="label">ARR</div><div class="value blue">${fmt$(r.arr)}</div></div>
         <div class="dash-card"><div class="label">LTV</div><div class="value ${colorClass('ltv',ltv.ltv)}">${fmt$(ltv.ltv)}</div></div>
         <div class="dash-card"><div class="label">CAC</div><div class="value ${colorClass('cac',cac.cac)}">${fmt$(cac.cac)}</div></div>
-        <div class="dash-card"><div class="label">LTV/CAC</div><div class="value ${lc.ratio>=3?'green':'red'}">${lc.ratio ? lc.ratio+'x' : 'N/A'}</div>${lc.rating?`<div style="font-size:11px;color:var(--text2);margin-top:4px">${lc.rating}</div>`:''}</div>
-        <div class="dash-card"><div class="label">Runway</div><div class="value ${colorClass('runway_months',rw.runway_months)}">${rw.runway_months ? rw.runway_months+' mo' : rw.note||'N/A'}</div></div>
-        <div class="dash-card"><div class="label">Payback</div><div class="value ${colorClass('payback_months',pb.payback_months)}">${pb.payback_months ? pb.payback_months+' mo' : 'N/A'}</div>${pb.rating?ratingBadge(pb.rating):''}</div>
+        <div class="dash-card"><div class="label">LTV/CAC</div><div class="value ${lc.ratio>=3?'green':'red'}">${lc.ratio != null ? lc.ratio+'x' : 'N/A'}</div>${lc.rating?`<div style="font-size:11px;color:var(--text2);margin-top:4px">${lc.rating}</div>`:''}</div>
+        <div class="dash-card"><div class="label">Runway</div><div class="value ${colorClass('runway_months',rw.runway_months)}">${rw.runway_months != null ? rw.runway_months+' mo' : rw.note||'N/A'}</div></div>
+        <div class="dash-card"><div class="label">Payback</div><div class="value ${colorClass('payback_months',pb.payback_months)}">${pb.payback_months != null ? pb.payback_months+' mo' : 'N/A'}</div>${pb.rating?ratingBadge(pb.rating):''}</div>
         <div class="dash-card"><div class="label">Churn</div><div class="value ${r.churn_rate_pct<=2?'green':r.churn_rate_pct<=5?'yellow':'red'}">${fmtPct(r.churn_rate_pct)}</div></div>
       </div>`);
   } catch(e) { showError('res-all', e.message); }
@@ -457,7 +498,7 @@ async function calcCompare() {
         <span class="${trendCls}">${d.delta != null ? (d.delta>0?'+':'')+fmtNum(d.delta) : 'N/A'} ${d.pct_change != null ? '('+d.pct_change+'%)' : ''}</span>
       </div>`;
     }
-    showResult('res-compare', `<h3>${r.labels.a} vs ${r.labels.b}</h3>${rows}`);
+    showResult('res-compare', `<h3>${escapeText(r.labels.a)} vs ${escapeText(r.labels.b)}</h3>${rows}`);
   } catch(e) { showError('res-compare', e.message); }
 }
 </script>
