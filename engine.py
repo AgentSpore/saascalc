@@ -1,5 +1,19 @@
 from __future__ import annotations
 
+from math import expm1, isfinite, log1p
+
+
+def validate_result(value: object) -> None:
+    """Reject nonfinite results, including nested dashboard and comparison values."""
+    if isinstance(value, float) and not isfinite(value):
+        raise OverflowError("Calculation exceeds supported numeric range")
+    if isinstance(value, dict):
+        for item in value.values():
+            validate_result(item)
+    elif isinstance(value, (list, tuple)):
+        for item in value:
+            validate_result(item)
+
 
 def calc_ltv(arpu: float, churn_rate_pct: float, gross_margin_pct: float = 100.0) -> dict:
     if churn_rate_pct <= 0:
@@ -52,11 +66,17 @@ def calc_payback(cac: float, arpu: float, gross_margin_pct: float = 100.0) -> di
 
 
 def calc_churn(customers_start: int, lost: int, period_days: int = 30) -> dict:
+    """Estimate 30-day and 360-day churn assuming constant cohort retention."""
     if customers_start <= 0:
         return {"error": "customers_start must be > 0"}
     rate = lost / customers_start
-    monthly_rate = rate * (30 / period_days)
-    annual_rate = 1 - (1 - monthly_rate) ** 12
+    # INVARIANT: compound survival keeps normalized cohort churn within 0..100%.
+    if rate == 1:
+        monthly_rate = annual_rate = 1.0
+    else:
+        log_retention = log1p(-rate)
+        monthly_rate = -expm1(log_retention * (30 / period_days))
+        annual_rate = -expm1(log_retention * (360 / period_days))
     return {
         "period_churn_pct": round(rate * 100, 2),
         "monthly_churn_pct": round(monthly_rate * 100, 2),

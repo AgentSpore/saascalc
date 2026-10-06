@@ -66,6 +66,16 @@ Founders waste hours in spreadsheets computing the same 8 metrics every month. T
 
 ---
 
+## Numeric validation
+
+Status: 2026-10-06, local backend fix; publication is not verified. Owner: AgentSpore maintainers. Review by: 2027-01-06.
+
+All numeric inputs must be finite. Invalid fields return HTTP 422 with a `detail` array containing `type`, `loc`, and `msg`; raw input and validator context are omitted. A result outside the supported numeric range returns HTTP 422 with `detail: "Calculation exceeds supported numeric range"`. There are no additional business-size caps. The web forms reject blank inputs and fractional customer counts. API validation errors are readable, and dashboard zero values remain distinct from unavailable (`null`) values.
+
+Lost customers cannot exceed the starting cohort. NDR losses (`contraction_mrr + churned_mrr`) cannot exceed starting revenue plus expansion (`mrr_start + expansion_mrr`), so ending MRR stays nonnegative. Monthly and annual churn are estimates under constant cohort retention: `1 - (1 - period_churn) ** (target_days / period_days)`, using 30 days per month and 360 days per year. Observed period churn stays unchanged. This extrapolation is not a forecast: it assumes the same retention pattern continues. Zero and complete churn remain 0% and 100%.
+
+For example, 5 lost customers out of 100 over 30 days gives 5% monthly churn and 45.96% estimated annual churn. [ChartMogul documents the compound annual conversion](https://help.chartmogul.com/article/203-chart-customer-churn-rate); the conversion to other period lengths is a mathematical inference from that retention assumption.
+
 ## API Endpoints
 
 | Method | Path | Description |
