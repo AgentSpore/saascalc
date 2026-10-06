@@ -1,5 +1,19 @@
 from __future__ import annotations
 
+from math import expm1, fsum, isfinite, log1p
+
+
+def validate_result(value: object) -> None:
+    """Reject nonfinite results, including nested dashboard and comparison values."""
+    if isinstance(value, float) and not isfinite(value):
+        raise OverflowError("Calculation exceeds supported numeric range")
+    if isinstance(value, dict):
+        for item in value.values():
+            validate_result(item)
+    elif isinstance(value, (list, tuple)):
+        for item in value:
+            validate_result(item)
+
 
 def calc_ltv(arpu: float, churn_rate_pct: float, gross_margin_pct: float = 100.0) -> dict:
     if churn_rate_pct <= 0:
@@ -52,11 +66,17 @@ def calc_payback(cac: float, arpu: float, gross_margin_pct: float = 100.0) -> di
 
 
 def calc_churn(customers_start: int, lost: int, period_days: int = 30) -> dict:
+    """Estimate 30-day and 360-day churn assuming constant cohort retention."""
     if customers_start <= 0:
         return {"error": "customers_start must be > 0"}
     rate = lost / customers_start
-    monthly_rate = rate * (30 / period_days)
-    annual_rate = 1 - (1 - monthly_rate) ** 12
+    # INVARIANT: compound survival keeps normalized cohort churn within 0..100%.
+    if rate == 1:
+        monthly_rate = annual_rate = 1.0
+    else:
+        log_retention = log1p(-rate)
+        monthly_rate = -expm1(log_retention * (30 / period_days))
+        annual_rate = -expm1(log_retention * (360 / period_days))
     return {
         "period_churn_pct": round(rate * 100, 2),
         "monthly_churn_pct": round(monthly_rate * 100, 2),
@@ -65,21 +85,31 @@ def calc_churn(customers_start: int, lost: int, period_days: int = 30) -> dict:
     }
 
 
-def calc_quick_ratio(new_mrr: float, expansion_mrr: float, churned_mrr: float, contraction_mrr: float) -> dict:
-    lost = churned_mrr + contraction_mrr
+def calc_quick_ratio(
+    new_mrr: float, expansion_mrr: float, churned_mrr: float, contraction_mrr: float
+) -> dict:
+    """Calculate growth efficiency, rejecting overflowing intermediate sums."""
+    lost = fsum((churned_mrr, contraction_mrr))
     if lost <= 0:
         return {"quick_ratio": None, "note": "No churn or contraction"}
-    qr = (new_mrr + expansion_mrr) / lost
+    qr = fsum((new_mrr, expansion_mrr)) / lost
     return {
         "quick_ratio": round(qr, 2),
-        "interpretation": "healthy (>4)" if qr > 4 else "good (2-4)" if qr >= 2 else "struggling (<2)",
+        "interpretation": "healthy (>4)"
+        if qr > 4
+        else "good (2-4)"
+        if qr >= 2
+        else "struggling (<2)",
     }
 
 
-def calc_ndr(mrr_start: float, expansion_mrr: float, contraction_mrr: float, churned_mrr: float) -> dict:
+def calc_ndr(
+    mrr_start: float, expansion_mrr: float, contraction_mrr: float, churned_mrr: float
+) -> dict:
+    """Calculate retention from a stable sum of signed revenue changes."""
     if mrr_start <= 0:
         return {"error": "mrr_start must be > 0"}
-    ending_mrr = mrr_start + expansion_mrr - contraction_mrr - churned_mrr
+    ending_mrr = fsum((mrr_start, expansion_mrr, -contraction_mrr, -churned_mrr))
     ndr = (ending_mrr / mrr_start) * 100
     if ndr >= 130:
         rating, note = "exceptional", "Hypergrowth from existing customers"
@@ -90,9 +120,11 @@ def calc_ndr(mrr_start: float, expansion_mrr: float, contraction_mrr: float, chu
     else:
         rating, note = "at_risk", "Revenue shrinking — urgent retention needed"
     return {
-        "ndr_pct": round(ndr, 1), "ending_mrr": round(ending_mrr, 2),
+        "ndr_pct": round(ndr, 1),
+        "ending_mrr": round(ending_mrr, 2),
         "net_change_mrr": round(ending_mrr - mrr_start, 2),
-        "rating": rating, "note": note,
+        "rating": rating,
+        "note": note,
     }
 
 
